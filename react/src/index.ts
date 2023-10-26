@@ -7,6 +7,7 @@ export { Hello } from "./examples/Hello";
 export { render } from "./render-helper";
 export { TextNeuronActivations } from "./activations/TextNeuronActivations";
 export { TokenAttribution } from "./attribution/TokenAttribution";
+export { StackedTokenAttribution } from "./attribution/StackedTokenAttribution";
 export { TokenLogProbs } from "./logits/TokenLogProbs";
 export { TopkSamples } from "./topk/TopkSamples";
 export { TopkTokens } from "./topk/TopkTokens";
