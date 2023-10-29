@@ -39,11 +39,13 @@ function Token({
       followCursor: true
     });
 
+  const scale = Math.max(Math.abs(max), Math.abs(min));
+
   // Get the background color
   const backgroundColor = getTokenBackgroundColor(
     value,
-    min,
-    max,
+    scale,
+    -scale,
     negativeColor,
     positiveColor
   ).toRgbString();
