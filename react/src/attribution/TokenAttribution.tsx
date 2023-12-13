@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col } from "react-grid-system";
 import { Token } from "../tokens/utils/Token";
 import { AnyColor } from "colord";
 
 
-function reduce_Y(arr: number[][]) {
-  const result = [];
-  for (let x = 0; x < arr.length; x++) {
-    let temp = 0;
-    for (let y = 0; y < arr[0].length; y++) {
-      temp = Math.max(temp, arr[x][y]);
-    }
-    result.push(temp);
-  }
-  return result;
+function reduce_Y(arr: number[][]) : number[] {
+  return arr.map((row : number[]) => row.reduce((sum : number, current : number) => sum+current, 0) );
+  // const result = [];
+  // for (let x = 0; x < arr.length; x++) {
+  //   let temp = 0;
+  //   for (let y = 0; y < arr[0].length; y++) {
+  //     temp = Math.max(temp, arr[x][y]);
+  //   }
+  //   result.push(temp);
+  // }
+  // return result;
 }
 
 function reduce_X(arr: number[][]) {
-  const result = [];
+  const result: number[] = new Array(arr[0].length).fill(0);
   for (let y = 0; y < arr[0].length; y++) {
-    let temp = 0;
     for (let x = 0; x < arr.length; x++) {
-      temp = Math.max(temp, arr[x][y]);
+      result[y] += arr[x][y];
     }
-    result.push(temp);
   }
   return result;
 }
@@ -42,19 +41,17 @@ function ColoredTokens({
 }: ColoredTokensProps) {
 
   const [hoveredTokenIndex, setHoveredTokenIndex] = useState<number | null>(null);
-  // console.log(`Hover index: ${hoveredTokenIndex}`);
-
   const aggActivations = hoverTokenIsTarget ? reduce_X(values) : reduce_Y(values);
-
-  // const currentActivations = hoveredTokenIndex !== null ? (hoverTokenIsTarget ? values.map(row => row[hoveredTokenIndex]) : values[hoveredTokenIndex]) : aggActivations;
-  // console.log(`current activation: ${currentActivations}`);
 
   const [lockedTokenIndex, setLockedTokenIndex] = useState<number | null>(null);
 
   const effectiveTokenIndex = lockedTokenIndex !== null ? lockedTokenIndex : hoveredTokenIndex;
   const currentActivations = effectiveTokenIndex !== null ? (hoverTokenIsTarget ? values.map(row => row[effectiveTokenIndex]) : values[effectiveTokenIndex]) : aggActivations;
 
-
+  console.log(Math.min(...currentActivations))
+  console.log(Math.max(...currentActivations))
+  console.log(hoveredTokenIndex)
+  console.log(lockedTokenIndex)
 
   return (
     <div className="colored-tokens" style={{ paddingBottom }}>
@@ -80,8 +77,8 @@ function ColoredTokens({
             key={key}
             token={token}
             value={currentActivations[key]}
-            min={minValue ?? Math.min(...currentActivations)}
-            max={maxValue ?? Math.max(...currentActivations)}
+            min={hoveredTokenIndex? minValue : Math.min(...currentActivations)}
+            max={hoveredTokenIndex? maxValue : Math.max(...currentActivations)}
             negativeColor={negativeColor}
             positiveColor={positiveColor}
           />
@@ -95,7 +92,7 @@ interface ColoredTokensProps {
 
   hoverTokenIsTarget: boolean;
 
-  maxValue?: number;
+  maxValue: number;
 
   /**
    * Minimum value
@@ -105,7 +102,7 @@ interface ColoredTokensProps {
    *
    * @default Math.min(...values)
    */
-  minValue?: number;
+  minValue: number;
 
   /**
    * Negative color
@@ -206,6 +203,8 @@ export function TokenAttribution({
       <Row style={selectRowStyle}>
         <Col>
           <ColoredTokens
+            maxValue={Math.max(...activations.flat())}
+            minValue={Math.min(...activations.flat())}
             tokens={tokens}
             values={activations}
             hoverTokenIsTarget={hoverTokenIsTarget}

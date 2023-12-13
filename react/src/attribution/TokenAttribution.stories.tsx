@@ -7,7 +7,7 @@ export default {
 } as ComponentMeta<typeof TokenAttribution>;
 
 const Template: ComponentStory<typeof TokenAttribution> = (args) => (
-  <TokenAttribution {...args} />
+    <TokenAttribution {...args} />
 );
 
 function generateLowerTriangularMatrix(n: number): number[][] {
