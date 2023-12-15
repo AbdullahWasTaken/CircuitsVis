@@ -48,10 +48,10 @@ function ColoredTokens({
   const effectiveTokenIndex = lockedTokenIndex !== null ? lockedTokenIndex : hoveredTokenIndex;
   const currentActivations = effectiveTokenIndex !== null ? (hoverTokenIsTarget ? values.map(row => row[effectiveTokenIndex]) : values[effectiveTokenIndex]) : aggActivations;
 
-  console.log(Math.min(...currentActivations))
-  console.log(Math.max(...currentActivations))
-  console.log(hoveredTokenIndex)
-  console.log(lockedTokenIndex)
+  // console.log(Math.min(...currentActivations))
+  // console.log(Math.max(...currentActivations))
+  // console.log(hoveredTokenIndex)
+  // console.log(lockedTokenIndex)
 
   return (
     <div className="colored-tokens" style={{ paddingBottom }}>
@@ -177,6 +177,9 @@ export function TokenAttribution({
     paddingBottom: 5
   };
 
+  const global_max = activations.flat().reduce((max, value) => Math.max(max, value), -Infinity);
+  const global_min = activations.flat().reduce((max, value) => Math.min(max, value), Infinity);
+  
   return (
     <Container fluid>
       <Row style={selectRowStyle}>
@@ -203,8 +206,8 @@ export function TokenAttribution({
       <Row style={selectRowStyle}>
         <Col>
           <ColoredTokens
-            maxValue={Math.max(...activations.flat())}
-            minValue={Math.min(...activations.flat())}
+            maxValue={global_max}
+            minValue={global_min}
             tokens={tokens}
             values={activations}
             hoverTokenIsTarget={hoverTokenIsTarget}
